@@ -1,35 +1,60 @@
-import Link from 'next/link';
 import ChannelGrid from '../components/ChannelGrid';
 import Layout from '../components/Layout';
 import PodcastList from '../components/PodcastList';
+import Error from 'next/error';
 
 export default class extends React.Component {
-  static async getInitialProps({ query }) {
+  static async getInitialProps({ query, res }) {
     const id = query.id;
 
-    let [reqChannel, reqAudios, reqSeries] = await Promise.all([
-      fetch(`https://api.audioboom.com/channels/${id}`),
-      fetch(
-        `https://api.audioboom.com/channels/${id}/audio_clips`
-      ),
-      fetch(
-        `https://api.audioboom.com/channels/${id}/child_channels`
-      )
-    ]);
+    try {
+      let [reqChannel, reqAudios, reqSeries] = await Promise.all([
+        fetch(`https://api.audioboom.com/channels/${id}`),
+        fetch(
+          `https://api.audioboom.com/channels/${id}/audio_clips`
+        ),
+        fetch(
+          `https://api.audioboom.com/channels/${id}/child_channels`
+        )
+      ]);
 
-    const dataChannel = await reqChannel.json();
-    const channel = dataChannel.body.channel;
+      if (reqChannel.status >= 400) {
+        res.statusCode = reqChannel.status;
+        return {
+          channel: null,
+          audioClips: null,
+          series: null,
+          statusCode: reqChannel.status
+        };
+      }
 
-    const dataAudios = await reqAudios.json();
-    const audioClips = dataAudios.body.audio_clips;
+      const dataChannel = await reqChannel.json();
+      const channel = dataChannel.body.channel;
 
-    const dataSeries = await reqSeries.json();
-    const series = dataSeries.body.channels;
+      const dataAudios = await reqAudios.json();
+      const audioClips = dataAudios.body.audio_clips;
 
-    return { channel, audioClips, series };
+      const dataSeries = await reqSeries.json();
+      const series = dataSeries.body.channels;
+
+      return { channel, audioClips, series, statusCode: 200 };
+    } catch (e) {
+      res.statusCode = 503;
+      return {
+        channel: null,
+        audioClips: null,
+        series: null,
+        statusCode: 503
+      };
+    }
   }
   render() {
-    const { channel, audioClips, series } = this.props;
+    const { channel, audioClips, series, statusCode } = this.props;
+
+    if (statusCode !== 200) {
+      return <Error statusCode={statusCode} />;
+    }
+
     return (
       <Layout title={channel.title}>
         <h1>{channel.title}</h1>
