@@ -12,7 +12,7 @@ class Layout extends React.Component {
 
         <header>
           <Link href="/">
-            <a>{title}</a>
+            <a>Podcasts</a>
           </Link>
         </header>
 

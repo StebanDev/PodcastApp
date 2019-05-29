@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Layout from '../components/Layout';
 
 export default class extends React.Component {
   static async getInitialProps({ query }) {
@@ -15,8 +16,7 @@ export default class extends React.Component {
   render() {
     const { clip } = this.props;
     return (
-      <div>
-        <header>Podcasts</header>
+      <Layout title={clip.title}>
         <div className="modal">
           <div className="clip">
             <Link href={`/channel?id=${clip.channel.id}`}>
@@ -34,7 +34,11 @@ export default class extends React.Component {
             <div className="player">
               <h3>{clip.title}</h3>
               <h6>{clip.channel.title}</h6>
-              <audio controls autoPlay src={clip.urls.high_mp3} />
+              <audio
+                controls
+                autoPlay
+                src={clip.urls.high_mp3}
+              />
             </div>
           </div>
         </div>
@@ -108,7 +112,7 @@ export default class extends React.Component {
             background: white;
           }
         `}</style>
-      </div>
+      </Layout>
     );
   }
 }
