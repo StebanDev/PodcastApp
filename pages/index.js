@@ -6,7 +6,7 @@ import Layout from '../components/Layout';
 import ChannelGrid from '../components/ChannelGrid';
 
 export default class extends React.Component {
-  static async getInitialProps({ res }) {
+  static async getInitialProps({ res = {} }) {
     try {
       const req = await fetch(
         'https://api.audioboom.com/channels/recommended'
