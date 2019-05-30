@@ -4,6 +4,11 @@ import PodcastList from '../components/PodcastList';
 import Error from './_error';
 
 export default class extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { openPodcast: null };
+  }
+
   static async getInitialProps({ query, res }) {
     const id = query.id;
 
@@ -48,8 +53,16 @@ export default class extends React.Component {
       };
     }
   }
+  openPodcast = (event, podcast) => {
+    event.preventDefault();
+    this.setState({
+      openPodcast: podcast
+    });
+  };
+
   render() {
     const { channel, audioClips, series, statusCode } = this.props;
+    const { openPodcast } = this.state;
 
     if (statusCode !== 200) {
       return <Error statusCode={statusCode} />;
@@ -66,8 +79,13 @@ export default class extends React.Component {
           </React.Fragment>
         )}
 
+        {openPodcast && <div>Podcast opened!!</div>}
+
         <h2>Últimos PodCasts</h2>
-        <PodcastList audioClips={audioClips} />
+        <PodcastList
+          audioClips={audioClips}
+          onClickPodcast={this.openPodcast}
+        />
       </Layout>
     );
   }

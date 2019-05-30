@@ -3,7 +3,7 @@ import slug from '../helper/slug';
 
 class PodcastList extends React.Component {
   render() {
-    const { audioClips } = this.props;
+    const { audioClips, onClickPodcast } = this.props;
     return (
       <div>
         {audioClips.map(clip => (
@@ -16,7 +16,10 @@ class PodcastList extends React.Component {
               id: clip.id
             }}
           >
-            <a className="podcast">
+            <a
+              className="podcast"
+              onClick={event => onClickPodcast(event, clip)}
+            >
               <h3>{clip.title}</h3>
               <div className="meta">
                 {Math.ceil(clip.duration / 60)} minutes
