@@ -1,7 +1,7 @@
 import ChannelGrid from '../components/ChannelGrid';
 import Layout from '../components/Layout';
 import PodcastList from '../components/PodcastList';
-import Error from 'next/error';
+import Error from './_error';
 
 export default class extends React.Component {
   static async getInitialProps({ query, res }) {
