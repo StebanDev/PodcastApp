@@ -2,6 +2,7 @@ import ChannelGrid from '../components/ChannelGrid';
 import Layout from '../components/Layout';
 import PodcastList from '../components/PodcastList';
 import Error from './_error';
+import PodcastPlayer from '../components/PodcastPlayer';
 
 export default class extends React.Component {
   constructor(props) {
@@ -59,6 +60,12 @@ export default class extends React.Component {
       openPodcast: podcast
     });
   };
+  closePodcast = event => {
+    event.preventDefault();
+    this.setState({
+      openPodcast: null
+    });
+  };
 
   render() {
     const { channel, audioClips, series, statusCode } = this.props;
@@ -79,7 +86,12 @@ export default class extends React.Component {
           </React.Fragment>
         )}
 
-        {openPodcast && <div>Podcast opened!!</div>}
+        {openPodcast && (
+          <PodcastPlayer
+            clip={openPodcast}
+            onClose={this.closePodcast}
+          />
+        )}
 
         <h2>Últimos PodCasts</h2>
         <PodcastList
